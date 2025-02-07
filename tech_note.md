@@ -183,6 +183,10 @@ service实现的时候动态计算limit语句的起始位置的时候用到了my
 这块最后debug发现了一个小问题，select的标签里面忘了设置id和resultType了，下不为例
 还有一个很蠢的问题，mybatis的if语句的标签是test不是text
 
+删除菜品：一次删除一个或者批量；起售不能删；套餐关联菜品不能删；删除菜品，关联口味数据删
+涉及到dish、dish_flavor、setmeal_dish三张表的操作，要理清楚，多看看相关的xml和mapper的sql怎么写的怎么想的
+@RequestParam注解可以mvc内置动态解析字符串提取参数封装进入List对象
+
 -----------------------------------------------------------
 
 拦截器：在server里面的interceptor，进行jwt令牌校验的拦截器，详见代码
