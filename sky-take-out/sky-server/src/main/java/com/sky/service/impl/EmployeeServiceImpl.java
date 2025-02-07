@@ -127,6 +127,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         long total = page.getTotal();
         List<Employee> records = page.getResult();
 
+        // 最后有个小问题，时间相关格式前端你啊到的是localdatetime类型，前端需要的是字符串格式的时间，可以再Employee类中使用@JsonFormat注解进行格式化
+        // 建议的解决方法是在WebMvcConfiguration中扩展SpringMVC的消息转换器，统一对日期类型进行格式化处理
         return new PageResult(total, records);
     }
 }

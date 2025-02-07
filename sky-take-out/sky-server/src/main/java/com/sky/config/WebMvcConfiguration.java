@@ -1,13 +1,22 @@
 package com.sky.config;
 
+import java.util.List;
+
 import com.sky.interceptor.JwtTokenAdminInterceptor;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+
+import com.sky.json.JacksonObjectMapper;
+
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -65,4 +74,19 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
         registry.addResourceHandler("/doc.html").addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
+
+    /**
+     * 扩展消息转换器，解决时间格式化问题
+     * @param converters
+     */
+    protected void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
+        // 创建一个消息转换器对象
+        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+        // 需要为消息转换器设置一个对象转换器，对象转换器可以将Java对象序列化为json格式
+        converter.setObjectMapper(new JacksonObjectMapper());
+        // 将消息转换器对象添加到mvc框架的转换器集合中
+        converters.add(0, converter); // 添加到集合的第一个位置，保证不被覆盖
+    }
+
+    
 }
