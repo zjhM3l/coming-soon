@@ -131,4 +131,31 @@ public class EmployeeServiceImpl implements EmployeeService {
         // 建议的解决方法是在WebMvcConfiguration中扩展SpringMVC的消息转换器，统一对日期类型进行格式化处理
         return new PageResult(total, records);
     }
+
+    /**
+     * 启用或禁用员工
+     * @param status
+     * @param id
+     */
+    public void startOrStop(Integer status, Long id) {
+        // update employee set status = ? where id = ?
+        // 为了提高通用性，在mapper不实现只针对status的更新，而是实现针对任意字段的更新
+        // 由于mapper.xml中使用了动态sql，所以需要传入一个实体类对象
+
+        // 1、创建实体类对象
+        // Employee employee = new Employee();
+
+        // 2、设置属性
+        // employee.setStatus(status);
+        // employee.setId(id);
+
+        // 也可以使用Builder模式
+        Employee employee = Employee.builder()
+                .status(status)
+                .id(id)
+                .build();
+
+        // 3、调用mapper方法
+        employeeMapper.update(employee);
+    }
 }

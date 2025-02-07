@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeePageQueryDTO;
@@ -109,5 +110,20 @@ public class EmployeeController {
     public Result<PageResult> page(EmployeePageQueryDTO employeePageQueryDTO) {
         PageResult pageResult = employeeService.pageQuery(employeePageQueryDTO);
         return Result.success(pageResult);
+    }
+
+    /**
+     * 启用或禁用员工
+     * @param status
+     * @param ids
+     * @return
+     */
+    // 不是查询，不需要返回data，所以不需要使用Result泛型
+    // status路径参数需要使用@PathVariable注解
+    @PostMapping("/status/{status}")
+    @ApiOperation("启用或禁用员工")
+    public Result startOrStop(@PathVariable("status") Integer status, Long id) {
+        employeeService.startOrStop(status, id);
+        return Result.success();
     }
 }
