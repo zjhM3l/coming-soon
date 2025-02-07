@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.sky.constant.MessageConstant;
 import com.sky.result.Result;
 import com.sky.utils.AliOssUtil;
 
@@ -56,7 +57,7 @@ class CommonController {
             return Result.success(filePath);
         } catch (Exception e) {
             log.error("文件上传失败", e);
-            return Result.error("文件上传失败");
         }
+        return Result.error(MessageConstant.UPLOAD_FAILED);
     }
 }
