@@ -11,6 +11,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * 在DTO的基础上添加了分类名称categoryName，在Dish中并不存在，但是由于在菜品分页界面要展示分类名称，所以需要扩展
+ */
+
 @Data
 @Builder
 @NoArgsConstructor
