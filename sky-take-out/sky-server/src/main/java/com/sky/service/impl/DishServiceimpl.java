@@ -101,11 +101,22 @@ public class DishServiceimpl implements DishService {
         }
 
         // 3. 批量删除菜品表中的菜品数据
-        for (Long id : ids) {
-            dishMapper.deleteById(id);
-            // 4. 批量删除口味表中的菜品关联的口味数据
-            // 不管有没有口味数据，直接删除
-            dishFlavorMapper.deleteByDishId(id);
-        }
+        // for (Long id : ids) {
+        //     dishMapper.deleteById(id);
+        //     // 4. 批量删除口味表中的菜品关联的口味数据
+        //     // 不管有没有口味数据，直接删除
+        //     dishFlavorMapper.deleteByDishId(id);
+        // }
+
+        // 5. 优化：批量删除菜品表中的菜品数据，不用for遍历两步sql
+        // 动态拼接(id1, id2, id3)即可，flavor同理
+
+        // 根据菜品id集合批量删除菜品表中的菜品数据
+        // delete from dish where id in (?, ?, ?)
+        dishMapper.deleteByIds(ids);
+
+        // 根据菜品id集合批量删除口味表中的菜品关联的口味数据
+        // delete from dish_flavor where dish_id in (?, ?, ?)
+        dishFlavorMapper.deleteByDishIds(ids);
     }
 }
