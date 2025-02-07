@@ -5,8 +5,10 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
 import com.github.pagehelper.Page;
+import com.sky.annotation.AutoFill;
 import com.sky.dto.EmployeePageQueryDTO;
 import com.sky.entity.Employee;
+import com.sky.enumeration.OperationType;
 
 @Mapper
 public interface EmployeeMapper {
@@ -28,7 +30,8 @@ public interface EmployeeMapper {
     @Insert("insert into employee (name, username, password, phone, sex, id_number, create_time, update_time, create_user, update_user, status)" + 
             "values" +
             "(#{name}, #{username}, #{password}, #{phone}, #{sex}, #{idNumber}, #{createTime}, #{updateTime}, #{createUser}, #{updateUser}, #{status})"
-            )                                             
+            )               
+    @AutoFill(OperationType.INSERT) // 标记当前方法需要进行公共字段自动填充处理                        
     void insert(Employee employee);
 
     /**
@@ -44,6 +47,7 @@ public interface EmployeeMapper {
      * @param employee
      */
     // 动态sql，写在xml中，因为需要动态标签
+    @AutoFill(OperationType.UPDATE) // 标记当前方法需要进行公共字段自动填充处理                        
     void update(Employee employee);
 
     /**

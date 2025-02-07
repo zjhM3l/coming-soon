@@ -85,8 +85,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         // 2、处理DTO中有但是实体类没有的属性
         employee.setStatus(StatusConstant.ENABLE); // 常量软编码
         employee.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes())); // 默认密码
-        employee.setCreateTime(LocalDateTime.now());
-        employee.setUpdateTime(LocalDateTime.now());
+        // AutoFillAspect中已经实现了公共字段的自动填充，所以这里不需要手动设置
+        // employee.setCreateTime(LocalDateTime.now());
+        // employee.setUpdateTime(LocalDateTime.now());
 
         // 3、创建人和修改人为当前登录用户的ID，比较特殊单独拎出来
         // jwt登录流程中，登陆成功后生成token的时候ID存入了jwt的payload中，拦截器中解析token的时候将ID存入了ThreadLocal中
@@ -96,8 +97,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         // 存ThreadLocal在\interceptor\JwtTokenAdminInterceptor.java实现，这里负责取
 
         // 调用工具类获取当前登录用户的ID
-        employee.setCreateUser(BaseContext.getCurrentId());
-        employee.setUpdateUser(BaseContext.getCurrentId());
+        // employee.setCreateUser(BaseContext.getCurrentId());
+        // employee.setUpdateUser(BaseContext.getCurrentId());
 
         // 4、调用mapper方法，持久层插入（记得文件开始的时候Autowired注入）
         employeeMapper.insert(employee);
@@ -182,8 +183,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         BeanUtils.copyProperties(employeeDTO, employee);
 
         // 2、设置修改时间和修改人
-        employee.setUpdateTime(LocalDateTime.now());
-        employee.setUpdateUser(BaseContext.getCurrentId());
+        // AutoFillAspect中已经实现了公共字段的自动填充，所以这里不需要手动设置
+        // employee.setUpdateTime(LocalDateTime.now());
+        // employee.setUpdateUser(BaseContext.getCurrentId());
 
         // 3、调用mapper方法
         employeeMapper.update(employee);
