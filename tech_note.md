@@ -164,6 +164,15 @@ service实现的时候动态计算limit语句的起始位置的时候用到了my
     1.准备工作：注册云服务账号，认证，进入后台
     2.入门程序：参照官方SDK（software development kit）编写
     3.集成使用(配置在yml，工具类在AliOssUtil，然后配置类OssConfiguration里面把AliOssUtil配置出来)
+阿里OSS实现文件上传的大致逻辑：
+    // 初始AliOssUtil对象，通过注解自动注入
+    // AliOssUtill的完整初始化流程：
+    // 1. 在AliOssProperties.java提供配置属性类（配置属性类，用于读取配置文件中对应的的配置项然后封装成java对象）
+    // 2. 在yml文件中配置相关属性
+    // 3. 在OssConfiguration.java中创建AliOssUtil对象（@ConditionalOnMissingBean全局唯一即可）
+    // 4. 在CommonController.java中使用@Autowired注解自动注入AliOssUtil对象
+    // 这样的话就可以直接使用AliOssUtil对象和相关方法了
+这里要注意一点，中间有段时间debug发现OssConfiguration启动项目拿不到四个属性，都是null，后来发现是因为yml文件的格式问题，最后alioss部分少了个缩进，要注意
 需要注意的点：新增菜品涉及到口味，两张表同步处理需要@Transactional进行注解形式的事务管理保证原子性，要么都成功要么都失败
 还有需要注意的点：主键回显：新增菜品的impl的部分口味表查数据需要菜品id，这里的菜品id是通过insert的“<insert id="insert" useGenerateKeys="true" keyProperty="id">”主键回显技术实现的
 这里遇到了一个巨他妈的逆天的bug，编译不了，查了半个小时发现sql的insert语句主键回显的时候关键词useGeneratedKeys，copilot自动补全成了useGenerateKeys（无语）
