@@ -168,3 +168,6 @@
 127.0.0.1 - - [07/Feb/2025:13:33:07 -0600] "GET /js/chunk-vendors.9b7e46a0.js.map HTTP/1.1" 200 10625104 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
 127.0.0.1 - - [07/Feb/2025:13:33:11 -0600] "POST /api/dish HTTP/1.1" 500 104 "http://localhost/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
 127.0.0.1 - - [07/Feb/2025:13:35:26 -0600] "POST /api/dish HTTP/1.1" 502 494 "http://localhost/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
+127.0.0.1 - - [07/Feb/2025:13:42:41 -0600] "POST /api/dish HTTP/1.1" 200 44 "http://localhost/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
+127.0.0.1 - - [07/Feb/2025:13:42:41 -0600] "GET /api/dish/page?page=1&pageSize=10&status= HTTP/1.1" 404 97 "http://localhost/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
+127.0.0.1 - - [07/Feb/2025:13:42:41 -0600] "GET /api/category/list?type=1 HTTP/1.1" 200 1275 "http://localhost/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
