@@ -46,4 +46,12 @@ public interface EmployeeMapper {
     // 动态sql，写在xml中，因为需要动态标签
     void update(Employee employee);
 
+    /**
+     * 根据id查询员工信息
+     * @param id
+     * @return
+     */
+    @Select("select * from employee where id = #{id}")
+    Employee getById(Long id);
+
 }
