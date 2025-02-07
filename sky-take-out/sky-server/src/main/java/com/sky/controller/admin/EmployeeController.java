@@ -20,7 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.web.bind.annotation.GetMapping;
+
 import com.sky.dto.EmployeeDTO;
+import com.sky.dto.EmployeePageQueryDTO;
+import com.sky.result.PageResult;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -44,6 +48,7 @@ public class EmployeeController {
      * @return
      */
     @PostMapping("/login")
+    @ApiOperation("员工登录")
     public Result<EmployeeLoginVO> login(@RequestBody EmployeeLoginDTO employeeLoginDTO) {
         log.info("员工登录：{}", employeeLoginDTO);
 
@@ -73,6 +78,7 @@ public class EmployeeController {
      * @return
      */
     @PostMapping("/logout")
+    @ApiOperation("员工退出")
     public Result<String> logout() {
         return Result.success();
     }
@@ -88,6 +94,20 @@ public class EmployeeController {
     public Result save(@RequestBody EmployeeDTO employeeDTO) {
         // 调用service方法
         employeeService.save(employeeDTO);
-        return null;
+        return Result.success();
+    }
+
+    /**
+     * 分页查询
+     * @return
+     */
+    // 前端传过来的query格式的参数，只有name，page，pageSize
+    // 而后端返还给前端的泛型Result，统一封装成一个PageResult对象，返还total和records
+    // 前端提交的是query三个参数，不是json格式，所以不需要使用@RequestBody注解
+    @GetMapping("/page")
+    @ApiOperation("员工分页查询")
+    public Result<PageResult> page(EmployeePageQueryDTO employeePageQueryDTO) {
+        PageResult pageResult = employeeService.pageQuery(employeePageQueryDTO);
+        return Result.success(pageResult);
     }
 }

@@ -1,6 +1,7 @@
 package com.sky.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 
@@ -18,9 +19,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.sky.constant.PasswordConstant;
 import com.sky.context.BaseContext;
 import com.sky.dto.EmployeeDTO;
+import com.sky.dto.EmployeePageQueryDTO;
+import com.sky.result.PageResult;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -98,4 +103,30 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeMapper.insert(employee);
     }
 
+    /** 
+     * 分页查询
+     * @param employeePageQueryDTO
+     * @return
+     */
+    public PageResult pageQuery(EmployeePageQueryDTO employeePageQueryDTO) {
+        // select * from employee limit 0,10
+        // 底层基于mysql的limit分页，DTO已经封装了page和pageSize，可以动态记录limit的参数拼装
+        // PageHelper可以简化分页代码编写，只需要在查询前调用startPage方法即可
+
+        // 1、开启分页
+        // 这里的pageHelper底层基于mybatis的拦截器实现，会把后一条sql动态拼接，动态的把limit拼进去计算
+        PageHelper.startPage(employeePageQueryDTO.getPage(), employeePageQueryDTO.getPageSize());
+
+        // 2、调用mapper方法
+        // PageHelper要求返回结果为Page类型
+        // 提问：为什么这里没有从上面拿到任何参数但是却知道怎么处理出来limit的参数？
+        // 答：源码pageHelper也是基于threadlocal实现的，能拿到页码和每页记录数，然后动态拼接limit和计算参数
+        Page<Employee> page = employeeMapper.pageQuery(employeePageQueryDTO);
+        
+        // 3、封装PageResult对象
+        long total = page.getTotal();
+        List<Employee> records = page.getResult();
+
+        return new PageResult(total, records);
+    }
 }
