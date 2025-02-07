@@ -8,7 +8,9 @@ import com.sky.result.Result;
 import com.sky.service.EmployeeService;
 import com.sky.utils.JwtUtil;
 import com.sky.vo.EmployeeLoginVO;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,6 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import com.sky.dto.EmployeeDTO;
+
+import io.swagger.annotations.ApiOperation;
 
 /**
  * 员工管理
@@ -71,4 +77,17 @@ public class EmployeeController {
         return Result.success();
     }
 
+    /** 
+     * 新增员工
+     * @param employeeDTO
+     * @return
+     */
+    // DTO接收数据，前端提交过来的是json格式的数据，所以需要使用@RequestBody注解
+    @PostMapping
+    @ApiOperation("新增员工")
+    public Result save(@RequestBody EmployeeDTO employeeDTO) {
+        // 调用service方法
+        employeeService.save(employeeDTO);
+        return null;
+    }
 }

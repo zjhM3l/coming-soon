@@ -1,5 +1,8 @@
 package com.sky.context;
 
+/**
+ * @Description: 打包好的ThreadLocal工具类
+ */
 public class BaseContext {
 
     public static ThreadLocal<Long> threadLocal = new ThreadLocal<>();
