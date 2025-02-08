@@ -1,10 +1,14 @@
 package com.sky.controller.admin;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sky.dto.SetmealDTO;
@@ -53,5 +57,17 @@ public class SetmealController {
     public Result<PageResult> page(SetmealPageQueryDTO setmealPageQueryDTO) {
         PageResult pageResult = setmealService.pageQuery(setmealPageQueryDTO);
         return Result.success(pageResult);
+    }
+
+    /**
+     * 批量删除套餐
+     * @param ids
+     * @return
+    */
+    @DeleteMapping
+    @ApiOperation("批量删除套餐")
+    public Result delete(@RequestParam List<Long> ids){
+        setmealService.deleteBatch(ids);
+        return Result.success();
     }
 }
