@@ -70,4 +70,11 @@ public interface DishMapper {
     // 动态sql，写入xml中
     @AutoFill(value = OperationType.UPDATE)
     void update(Dish dish);
+
+    /**
+     * 动态条件查询菜品
+     * @param dish
+     * @return
+    */
+    List<Dish> list(Dish dish);
 }
