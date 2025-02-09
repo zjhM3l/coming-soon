@@ -271,6 +271,7 @@ service实现的时候动态计算limit语句的起始位置的时候用到了my
             5. ZSetOperations zSetOperations = redisTemplate.opsForZSet();
         这里要注意的是，redis的string和java的string是有区别的，redisTemplate可以接收任意类型的数据，在config时指定了序列化规则为string后，可以自动将任意类型数据序列化为string类型
         务必认真看SpringDataRedisTest测试类
+店铺营业设置开发
 
 -----------------------------------------------------------
 
