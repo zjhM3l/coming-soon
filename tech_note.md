@@ -300,9 +300,31 @@ HttpClient：是Apache Jakarta Common下的子项目，可以用来提供高效�
         创建HttpClient对象
         创建Http请求对象，结合请求类型构建HttpGet或HttpPost对象
         调用HttpClient的execute方法发送请求
+相关工具类已经封装进入HttpClientUtil.java
+
+微信小程序开发流程
+    1. 准备工作
+        -注册小程序
+        -完善小程序信息
+        -下载开发者工具
+    2. 开发小程序（本质是用js开发前端）
+        目录结构：主体部分三个文件，必须放在根目录
+            -app.js：小程序逻辑
+            -app.json：小程序公共配置
+            -app.wxss：可有可无，小程序公共样式表（类似css）
+        页面：小程序每个页面放在pages下面，其中每个页面包含四个文件
+            -js：页面逻辑
+            -wxml：页面结构
+            -json：页面配置（可选）
+            -wxss：页面样式表（可选）
+    3. 提交审核和发布（上传代码然后去管理页面送审）
+
+微信登录具体实现：https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/login.html
 
 商品浏览
 
+
 -----------------------------------------------------------
 
+-----------------------------------------------------------
 

@@ -7,3 +7,4 @@
 6. OSS容器bucket存储文件
 7. Spring Data Redis框架操作Redis，从一开始营业状态分析为什么用redis不用mysql，到怎么用
 8. HttpClient实现微信登录
+9. 微信小程序开发
