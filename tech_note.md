@@ -101,6 +101,11 @@ Swagger的常用注解：可以控制生成的接口文档提高可读性
 
 -----------------------------------------------------------
 
+拦截器：在server里面的interceptor，进行jwt令牌校验的拦截器，详见代码
+由于频繁使用swagger进行后端测试，而jwt令牌会校验失败，因此利用一些方法统一在文档提交一个jwt令牌，利用登录获取一个令牌token，然后将令牌复制到swagger的文档管理，全局参数设置添加一个token参数
+
+-----------------------------------------------------------
+
 具体问题：
 
 新增员工
@@ -192,10 +197,79 @@ service实现的时候动态计算limit语句的起始位置的时候用到了my
 
 套餐新增、分页查询、删除、更新、起售停售略。文档在day4
 
+店铺营业设置：Redis
+1.Redis入门：
+    简介：Redis是一个基于内存的key-value结构数据库
+    MySQL和Redis的区别：
+        介质：MySQL是基于硬盘的，Redis是基于内存的，读写性能高，适合存储热点数据（在某个时间段内访问频率高的数据）
+        数据结构：MySQL是基于二维表的，Redis是基于key-value的
+    win项目用redis服务：
+        1. 启用：安装目录cmd，输入：redis-server.exe redis.windows.conf
+        2. 连接
+            2.a 本地redis：安装目录cmd，输入：redis-cli.exe
+            2.b 远程redis：安装目录cmd，输入：redis-cli.exe -h 【ip】 -p 【port】例如 redis-cli.exe -h localhost -p 6379指定地址和端口
+        3. 退出：exit
+        4. 设置密码：在redis.windows.conf中设置requirepass 【password】例如 requirepass 123456，记得去掉注释符号。Redis没有用户概念，只有密码概念，有密码就行
+    Win的Redis图形界面：Redis-Desktop-Manager(要在上述命令执行后才能连接)
+2.Redis常用数据类型：Redis存储的是key-value结构的数据，key是字符串类型，value可以是以下类型，注意下列是value的结构：
+    字符串string
+    哈希hash：field-value，类似HashMap结构；适合存储对象，例如：{"name":"张三","age":18}，name和age是field，张三和18是value
+    列表list：类似队列，按照插入顺序排序，可以有重复元素，类似Java中的LinkedList；适合存储和顺序有关的数据
+    集合set：无序集合，无重复元素，类似HashSet；适合存储不重复的数据
+    有序集合zset/sorted set：集合中每个元素关联一个分数score，根据分数升序排序，没有重复元素；适合存储排行榜数据
+3.Redis常用命令
+    Redis和MySQL的区别：MySQL的命令基于sql，不需要考虑数据类型，Redis的命令基于数据类型，需要考虑数据类型
+    字符串操作命令
+        SET key value：设置key的值为value
+        GET key：获取key的值
+        SETEX key seconds value：设置key的值为value，seconds秒后过期；常见于短信验证码
+        SETNX key value：只有在key不存在时设置key的值为value；常见于分布式锁
+    哈希hash操作命令
+        Redis hash是一个string类型的field和value的映射表，也就是整个数据结构类似key-value结构，其中value由多个field-value对组成
+        HSET key field value：将哈希表key的field的值设为value
+        HGET key field：获取key的field的值
+        HDEL key field：删除key的field
+        HKEYS key：获取key的所有field
+        HVALS key：获取key的所有value
+    列表操作命令
+        Redis list是简单的字符串列表，按照插入顺序排序，即key-value，其中value是一个列表且每个元素都是字符串
+        LPUSH key value1 [value2]：将一个或多个值value插入到列表key的表头
+        LRANGE key start stop：获取列表指定区间内的元素，
+        RPOP key：移除并返回列表的最后一个元素
+        LLEN key：获取列表的长度
+    集合操作命令
+        Redis set是string类型的无序集合，集合成员唯一且无序 
+        SAAD key member1 [member2]：向集合添加一个或多个成员
+        SMEMBERS key：返回集合中的所有成员
+        SCARD key：返回集合的成员数
+        SINTER key1 [key2]：返回给定所有集合的交集
+        SUNION key1 [key2]：返回给定所有集合的并集
+        SREM key member1 [member2]：移除集合中一个或多个成员
+    有序集合zset操作命令
+        Redis zset是string类型的有序集合，集合成员唯一且每个元素关联一个double类型的分数score
+        ZADD key score1 member1 [score2 member2]：向有序集合添加一个或多个成员，或者更新已存在成员的分数
+        ZRANGE key start stop [WITHSCORES]：返回有序集中指定区间内的成员，如果指定了WITHSCORES选项，则一并返回成员的排名和分数
+        ZINCRBY key increment member：为有序集合中的成员的分数加上增量increment
+        ZREM key member1 [member2]：移除有序集合中的一个或多个成员
+    通用命令
+        KEYS pattern：查找所有符合给定模式pattern的key
+        EXISTS key：检查给定key是否存在
+        TYPE key：返回key所储存的值value的类型
+        DEL key：该命令用于在key存在时删除key
+4.在Java中操作Redis
+    Redis的Java客户端有很多，常用的有Jedis、Lettuce、Spring Data Redis
+    Spring Data Redis框架操作Redis
+        1. 导入Spring Data Redis的maven坐标
+        2. 配置Redis数据源
+        3. 编写配置类RedisConfiguration，创建RedisTemplate对象
+        4. 通过RedisTemplate对象操作Redis
+        Spring Data Redis提供的针对五类数据类型的接口
+            1. ValueOperations valueOperations = redisTemplate.opsForValue();
+            2. ListOperations listOperations = redisTemplate.opsForList();
+            3. SetOperations setOperations = redisTemplate.opsForSet();
+            4. HashOperations hashOperations = redisTemplate.opsForHash();
+            5. ZSetOperations zSetOperations = redisTemplate.opsForZSet();
+            
 -----------------------------------------------------------
 
-拦截器：在server里面的interceptor，进行jwt令牌校验的拦截器，详见代码
-由于频繁使用swagger进行后端测试，而jwt令牌会校验失败，因此利用一些方法统一在文档提交一个jwt令牌，利用登录获取一个令牌token，然后将令牌复制到swagger的文档管理，全局参数设置添加一个token参数
-
------------------------------------------------------------
 

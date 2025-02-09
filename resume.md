@@ -4,4 +4,5 @@
 3. 功能实现的企业级开发流程（需求，开发，测试，完善）
 4. threadlocal解决jwt拦截器拦截解析empId步骤中的传递到service（分页功能调用的pagehelper的底层也是threadlocal）
 5. 通过面向切面编程AOP，定义切面类拦截注解的方法，解决大量公共字段填充问题，大幅降低代码重复率。涉及到的技术有（枚举、注解、AOP（切面、切入点、通知）、反射（为公共字段赋值））主体代码在AutoFillAspect，AutoFill定义了注解，mapper里面要对应函数进行标注，然后最后记得之后所有的impl里面涉及到相关已经统一处理了的公共字段就不要管了
-6.OSS容器bucket存储文件
+6. OSS容器bucket存储文件
+7. Redis
