@@ -271,7 +271,9 @@ service实现的时候动态计算limit语句的起始位置的时候用到了my
             5. ZSetOperations zSetOperations = redisTemplate.opsForZSet();
         这里要注意的是，redis的string和java的string是有区别的，redisTemplate可以接收任意类型的数据，在config时指定了序列化规则为string后，可以自动将任意类型数据序列化为string类型
         务必认真看SpringDataRedisTest测试类
-店铺营业设置开发
+店铺营业设置开发:修改和查询的接口；查询营业状态在商家/用户都要查，所以二者最好用分开的查询接口，遵从约定管理端从/admin开始，用户端从/user开始
+其中用户和管理端的查询状态接口不需要请求参数，返还还是老两样code、msg和表示状态的int data，这样的话没必要存到表里（只有一个字段而且只有一列0或者1），不如存到redis里面。
+综上分析过程：营业状态数据存储方式最好基于Redis字符串进行存储 SHOP_STATUS-value（0或1）
 
 -----------------------------------------------------------
 
