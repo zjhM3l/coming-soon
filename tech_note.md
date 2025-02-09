@@ -320,6 +320,7 @@ HttpClient：是Apache Jakarta Common下的子项目，可以用来提供高效�
     3. 提交审核和发布（上传代码然后去管理页面送审）
 
 微信登录具体实现：https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/login.html
+主要实现流程在UserController-UserService-impl-mapper要注意的是，小程序登录之后的token是authentication，这个需要校验，需要一个拦截器校验小程序端的请求JwtTokenUserInterceptor.java，写完拦截器别忘了去WebMvcConfiguration注册一下，这里格外注意line55要跳过status，因为在登录前进入页面之后用户就需要看到status,这个请求发起要早于登录
 
 商品浏览
 
