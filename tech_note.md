@@ -106,7 +106,7 @@ Swagger的常用注解：可以控制生成的接口文档提高可读性
 
 -----------------------------------------------------------
 
-具体问题：
+管理端具体问题：
 
 新增员工
 1.新增员工的已存在员工500异常处理，即sql出现unique属性重复异常，在GlobalExceptionHandler里面捕获SQL异常
@@ -282,5 +282,27 @@ swagger用户端和商家接口文档的区分，修改WebMvcConfiguration配置
 
 -----------------------------------------------------------
 
+用户端具体问题：
+
+微信登录：
+使用HttpClient（在java程序中构造请求并发送）请求微信某接口，实现微信登录
+HttpClient：是Apache Jakarta Common下的子项目，可以用来提供高效的、最新的、功能丰富的支持HTTP协议的客户端编程工具包，并且它支持HTTP协议最新的版本和建议
+即允许Java通过编码的方式来发送HTTP请求
+使用：详见HttpClientTest.java的请求使用测试示例
+    1. 导入Maven依赖（导入的aliyun-oss-sdk底层是httpclient，所以不用再单独导入了）
+    2. 核心API：
+        HttpClient：接口，发送http请求
+        HttpClients：构建器，可以创建HttpClient对象
+        CloseableHttpClient：具体实现类，实现了HttpClient接口
+        HttpGet：发送GET请求
+        HttpPost：发送POST请求
+    3. 发送请求步骤
+        创建HttpClient对象
+        创建Http请求对象，结合请求类型构建HttpGet或HttpPost对象
+        调用HttpClient的execute方法发送请求
+
+商品浏览
+
+-----------------------------------------------------------
 
 
