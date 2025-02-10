@@ -334,6 +334,19 @@ HttpClient：是Apache Jakarta Common下的子项目，可以用来提供高效�
         数据库中菜品数据有变更时清理缓存数据（确保一致性），包含了，修改、新增、删除、起售停售之后都需要清理缓存。这块还可以用AOP，写一个缓存切面拦截清除缓存的指令;或者抽取出来单独方法cleanCache
         还有一点要注意的是，redis相关操作在controller层操作
 -缓存套餐（进一步利用Spring Cache简化Redis编码提高开发效率）
+    Spring Cache简化代码（提供注解简化代码）
+        SpringCache是一个框架，实现了基于注解的缓存功能，只需要简单的加一个注解，就能实现缓存功能
+        SpringCache提供了一层抽象，底层可以切换不同的缓存实现如EHCache、Caffeine、Redis（pom导入任何缓存坐标，springcache可以自动检测底层用什么缓存）
+        常用注解
+            @EnableCaching：开启缓存注解功能，加在启动类上
+            @Cacheable：在方法执行前先查询缓存中是否有数据，如果有数据，则直接返回缓存数据；如果没有缓存数据，调用方法并将方法返回值放到缓存中
+            @CachePut：将方法的返回值放到缓存中
+            @CacheEvict：将一条或多条数据从缓存中删除
+    实现思路
+        1. 导入Spring Cache和Redis相关maven坐标
+        2. 在启动类上加入@EnableCaching注解，开启缓存注解功能
+        3. 在用户端接口SetmealController的list方法加上Cacheable注解
+        4. 在管理端口SetmealController的save、delete、update、startOrStop等方法上加入CacheEvict注解
 
 购物车
 -添加
