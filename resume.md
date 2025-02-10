@@ -5,6 +5,6 @@
 4. threadlocal解决jwt拦截器拦截解析empId步骤中的传递到service（分页功能调用的pagehelper的底层也是threadlocal）
 5. 通过面向切面编程AOP，定义切面类拦截注解的方法，解决大量公共字段填充问题，大幅降低代码重复率。涉及到的技术有（枚举、注解、AOP（切面、切入点、通知）、反射（为公共字段赋值））主体代码在AutoFillAspect，AutoFill定义了注解，mapper里面要对应函数进行标注，然后最后记得之后所有的impl里面涉及到相关已经统一处理了的公共字段就不要管了
 6. OSS容器bucket存储文件
-7. Spring Data Redis框架操作Redis，从一开始营业状态分析为什么用redis不用mysql，到怎么用
+7. Spring Data Redis框架操作Redis，从一开始营业状态分析为什么用redis不用mysql，到怎么用；以及后面的缓存商品数据使用redis，因为商品请求次数会很大，而且高峰时间会出现集中请求的情况，数据库压力过大，因此采用Redis缓存，大大提高查询性能（详见tech note对应部分）
 8. HttpClient结合微信小程序实现微信登录
 9. 微信小程序开发用户端
