@@ -17,6 +17,7 @@ import com.sky.dto.DishDTO;
 import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.entity.DishFlavor;
+import com.sky.entity.Setmeal;
 import com.sky.exception.DeletionNotAllowedException;
 import com.sky.mapper.DishFlavorMapper;
 import com.sky.mapper.DishMapper;
@@ -99,7 +100,7 @@ public class DishServiceimpl implements DishService {
         // 2. 菜品是否能够删除——是否关联套餐？
         // 菜品和套餐多对多关系，中间关系表setmeal_dish
         // 注入SetmealDishMapper
-        List<Long> setmealIds = setmealDishMapper.getSetmealIdsByDishId(ids);
+        List<Long> setmealIds = setmealDishMapper.getSetmealIdsByDishIds(ids);
         if (setmealIds != null && setmealIds.size() > 0) {
             throw new DeletionNotAllowedException(MessageConstant.DISH_BE_RELATED_BY_SETMEAL);
         }
@@ -170,6 +171,38 @@ public class DishServiceimpl implements DishService {
             dishFlavorMapper.insertBatch(flavors);
         }
 
+    }
+
+    /**
+     * 菜品起售停售
+     *
+     * @param status
+     * @param id
+    */
+    @Transactional
+    public void startOrStop(Integer status, Long id) {
+        Dish dish = Dish.builder()
+            .id(id)
+            .status(status)
+            .build();
+        dishMapper.update(dish);
+
+        if (status == StatusConstant.DISABLE) {
+            // 如果是停售操作，还需要将包含当前菜品的套餐也停售
+            List<Long> dishIds = new ArrayList<>();
+            dishIds.add(id);
+            // select setmeal_id from setmeal_dish where dish_id in (?,?,?)
+            List<Long> setmealIds = setmealDishMapper.getSetmealIdsByDishIds(dishIds);
+            if (setmealIds != null && setmealIds.size() > 0) {
+                for (Long setmealId : setmealIds) {
+                    Setmeal setmeal = Setmeal.builder()
+                        .id(setmealId)
+                        .status(StatusConstant.DISABLE)
+                        .build();
+                    setmealMapper.update(setmeal);
+                }
+            }
+        }
     }
 
     /**
