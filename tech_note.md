@@ -380,6 +380,7 @@ HttpClient：是Apache Jakarta Common下的子项目，可以用来提供高效�
             获取临时域名：就是一个公网IP，微信后台可以通过这个IP回调程序；使用cpolar进行内网穿透（操作教程见119/199后半段）
                 临时ip：http://6e578268.r3.cpolar.cn
     3.代码导入（可以直接使用代码，很固定可复用，替换企业码即可）
+        具体代码的每个部分每一行的解释和理解都在对应文件的注释里面，自己下去看（建议结合微信小程序官方文档的支付时序图看
         application.yml配置
         OrderController的订单支付
         OrderService的payment和paySuccess

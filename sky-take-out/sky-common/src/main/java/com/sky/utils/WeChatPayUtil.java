@@ -30,7 +30,7 @@ import java.util.Base64;
 import java.util.List;
 
 /**
- * 微信支付工具类
+ * 微信支付工具类（微信支付相关核心代码）
  */
 @Component
 public class WeChatPayUtil {
@@ -79,6 +79,8 @@ public class WeChatPayUtil {
      * @param body
      * @return
      */
+    // 封装步骤3中商户系统发起调用微信下单接口需要准备的参数并发起post请求
+    // 对这个post请求又进行了封装，底层调用了httpclient
     private String post(String url, String body) throws Exception {
         CloseableHttpClient httpClient = getClient();
 
@@ -131,6 +133,7 @@ public class WeChatPayUtil {
      * @param openid      微信用户的openid
      * @return
      */
+    // 封装步骤3中商户系统发起调用微信下单接口需要准备的参数并发起post请求
     private String jsapi(String orderNum, BigDecimal total, String description, String openid) throws Exception {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("appid", weChatProperties.getAppid());
@@ -163,6 +166,8 @@ public class WeChatPayUtil {
      * @param openid      微信用户的openid
      * @return
      */
+    // 步骤3中商户系统发起调用微信下单接口
+    // 拿到预支付交易单号后，整个进行复杂的加密还有签名，最后封装成一个json对象返回给小程序端
     public JSONObject pay(String orderNum, BigDecimal total, String description, String openid) throws Exception {
         //统一下单，生成预支付交易单
         String bodyAsString = jsapi(orderNum, total, description, openid);
@@ -193,6 +198,7 @@ public class WeChatPayUtil {
             String packageSign = Base64.getEncoder().encodeToString(signature.sign());
 
             //构造数据给微信小程序，用于调起微信支付
+            // 调起wx.requestPayment需要的参数
             JSONObject jo = new JSONObject();
             jo.put("timeStamp", timeStamp);
             jo.put("nonceStr", nonceStr);

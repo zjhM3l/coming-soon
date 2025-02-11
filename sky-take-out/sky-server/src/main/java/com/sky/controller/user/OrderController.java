@@ -45,12 +45,15 @@ public class OrderController {
      * @param ordersPaymentDTO
      * @return
      */
+    // 步骤2中小程序请求微信支付到商户系统的接口
     @PutMapping("/payment")
     @ApiOperation("订单支付")
     public Result<OrderPaymentVO> payment(@RequestBody OrdersPaymentDTO ordersPaymentDTO) throws Exception {
+        // 小程序端传过来订单号和付款方式
         log.info("订单支付：{}", ordersPaymentDTO);
         OrderPaymentVO orderPaymentVO = orderService.payment(ordersPaymentDTO);
         log.info("生成预支付交易单：{}", orderPaymentVO);
+        // 响应结果返回给小程序端，对应步骤4
         return Result.success(orderPaymentVO);
     }
 }

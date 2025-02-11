@@ -136,6 +136,7 @@ public class OrderServiceImpl implements OrderService{
 
         //调用微信支付接口，生成预支付交易单
         // 记得注入WeChatPayUtil
+        // 步骤3中商户系统发起调用微信下单接口->pay
         JSONObject jsonObject = weChatPayUtil.pay(
                 ordersPaymentDTO.getOrderNumber(), //商户订单号
                 new BigDecimal(0.01), //支付金额，单位 元
@@ -147,6 +148,7 @@ public class OrderServiceImpl implements OrderService{
             throw new OrderBusinessException("该订单已支付");
         }
 
+        // 再封装成VO返回给controller
         OrderPaymentVO vo = jsonObject.toJavaObject(OrderPaymentVO.class);
         vo.setPackageStr(jsonObject.getString("package"));
 
