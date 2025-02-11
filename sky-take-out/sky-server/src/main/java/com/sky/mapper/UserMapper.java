@@ -22,4 +22,13 @@ public interface UserMapper {
      */
     // 这里注册完之后需要返回主键，因为controller后面需要使用，所以用xml
     void insert(User user);
+
+
+    /**
+     * 根据id查询用户
+     * @param userId
+     * @return
+     */
+    @Select("select * from user where id = #{id}")
+    User getById(Long userId);
 }
