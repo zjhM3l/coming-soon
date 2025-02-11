@@ -348,11 +348,7 @@ HttpClient：是Apache Jakarta Common下的子项目，可以用来提供高效�
         3. 在用户端接口SetmealController的list方法加上Cacheable注解
         4. 在管理端口SetmealController的save、delete、update、startOrStop等方法上加入CacheEvict注解
 
-购物车
--添加
--删减
--查看
--清空
+购物车:添加、删减、查看、清空，注意这里在设计cart表时适当的引入了冗余字段，但是冗余字段要求不能经常变化而且不建议经常使用，属于空间换时间，98/199；11:00处；而且注意简单分析一下就知道购物车不能缓存;impl的addShoppingCart的逻辑比较复杂，需要考虑的情况比较多，注意一下
 
 -----------------------------------------------------------
 
