@@ -103,6 +103,16 @@ public class OrderServiceImpl implements OrderService{
         orders.setPhone(addressBook.getPhone());
         orders.setConsignee(addressBook.getConsignee());
         orders.setUserId(userId);
+        // 拼接完整地址信息
+        String fullAddress = String.join(" ", 
+        addressBook.getProvinceName(), 
+        addressBook.getCityName(), 
+        addressBook.getDistrictName(), 
+        addressBook.getDetail()
+        );
+
+        // 设置地址
+        orders.setAddress(fullAddress);
 
         // 下面订单明细需要订单的主键，这里要主键回填
         orderMapper.insert(orders);
