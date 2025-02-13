@@ -354,6 +354,9 @@ Apache Echarts
         2. 使用 JavaScript 创建图表实例（官网有模版），并配置数据和样式（官网都有很详细的使用说明）
         3. 重点是需要后端提供符合格式要求的动态数据，然后响应给前端来显示图表
 
+数据导出表Excel（Apache POI）
+处理microsoft office各种文件格式，一般操作excel
+
 -----------------------------------------------------------
 
 swagger用户端和商家接口文档的区分，修改WebMvcConfiguration配置类
