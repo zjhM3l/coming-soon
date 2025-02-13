@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
  */
 @Component // 也是最终交给spring容器管理
 @ServerEndpoint("/ws/{sid}") // 访问路径，根据路径匹配，类似于Controller
+// 而且这里在nginx里面的conf文件里面也有配置，反向代理把ws请求转发到这个路径
 public class WebSocketServer {
 
     //存放会话对象，建立一个会话就相当于建立一个连接

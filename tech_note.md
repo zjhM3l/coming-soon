@@ -444,8 +444,13 @@ WebSocket：基于TCP的一种新的网络协议，实现了浏览器与服务�
         4. 导入配置类WebSocketConfiguration注册WebSocket的服务端组件（配置类代码固定，哪个任务用到websocket都是这个）
         5. 导入定时任务类WebSocketTask定时向客户端推送数据
 
-来电提醒（Websocket）
-    
+来单提醒（Websocket）
+    需求：用户下单并且支付后，第一时间通知外卖商家（语音播报+弹出提示框）
+    设计：
+        1. 通过WebSocket实现管理端页面和服务端保持长连接状态（WebSocketServer）
+        2. 客户支付后，调用WebSocket的相关API实现服务端向客户端推送消息(paySuccess)
+        3. 客户端浏览器解析服务端推送的消息，判断是来单提醒还是客户催单，进行相应的消息提示和语音播报
+        4. 约定服务端发送给客户端浏览器的数据格式为JSON，字段包括：type,orderId,content
 
 客户催单（Websocket）
 -----------------------------------------------------------

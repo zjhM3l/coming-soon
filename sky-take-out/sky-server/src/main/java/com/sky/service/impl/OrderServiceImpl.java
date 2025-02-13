@@ -3,7 +3,10 @@ package com.sky.service.impl;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
@@ -11,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -42,6 +46,7 @@ import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderStatisticsVO;
 import com.sky.vo.OrderSubmitVO;
 import com.sky.vo.OrderVO;
+import com.sky.websocket.WebSocketServer;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -67,6 +72,9 @@ public class OrderServiceImpl implements OrderService{
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private WebSocketServer webSocketServer;
 
     /**
      * 用户下单
@@ -145,7 +153,7 @@ public class OrderServiceImpl implements OrderService{
     }
 
     /**
-     * 订单支付
+     * 订单支付(伪支付，真逻辑已注释掉)
      *
      * @param ordersPaymentDTO
      * @return
@@ -158,20 +166,32 @@ public class OrderServiceImpl implements OrderService{
         //调用微信支付接口，生成预支付交易单
         // 记得注入WeChatPayUtil
         // 步骤3中商户系统发起调用微信下单接口->pay
-        JSONObject jsonObject = weChatPayUtil.pay(
-                ordersPaymentDTO.getOrderNumber(), //商户订单号
-                new BigDecimal(0.01), //支付金额，单位 元
-                "苍穹外卖订单", //商品描述
-                user.getOpenid() //微信用户的openid
-        );
+        // JSONObject jsonObject = weChatPayUtil.pay(
+        //         ordersPaymentDTO.getOrderNumber(), //商户订单号
+        //         new BigDecimal(0.01), //支付金额，单位 元
+        //         "苍穹外卖订单", //商品描述
+        //         user.getOpenid() //微信用户的openid
+        // );
 
-        if (jsonObject.getString("code") != null && jsonObject.getString("code").equals("ORDERPAID")) {
-            throw new OrderBusinessException("该订单已支付");
-        }
+        // if (jsonObject.getString("code") != null && jsonObject.getString("code").equals("ORDERPAID")) {
+        //     throw new OrderBusinessException("该订单已支付");
+        // }
 
-        // 再封装成VO返回给controller
-        OrderPaymentVO vo = jsonObject.toJavaObject(OrderPaymentVO.class);
-        vo.setPackageStr(jsonObject.getString("package"));
+        // // 再封装成VO返回给controller
+        // OrderPaymentVO vo = jsonObject.toJavaObject(OrderPaymentVO.class);
+        // vo.setPackageStr(jsonObject.getString("package"));
+        
+        // -------------------------------------------------------------------------------- 
+        // 直接调用 `paySuccess()` 让订单变成已支付
+        paySuccess(ordersPaymentDTO.getOrderNumber());
+
+        // 伪造支付成功的返回数据
+        OrderPaymentVO vo = new OrderPaymentVO();
+        vo.setPackageStr("mock_package_string"); // 伪造package字段
+        vo.setTimeStamp(String.valueOf(System.currentTimeMillis())); // 伪造时间戳
+        vo.setNonceStr(UUID.randomUUID().toString().replace("-", "")); // 伪造随机字符串
+        vo.setSignType("RSA"); // 伪造签名方式
+        vo.setPaySign("mock_signature"); // 伪造签名
 
         return vo;
     }
@@ -195,6 +215,15 @@ public class OrderServiceImpl implements OrderService{
                 .build();
 
         orderMapper.update(orders);
+
+        // 通过Websocket向客户端浏览器推送消息
+        Map map = new HashMap();
+        map.put("type", 1); // 1表示来单提醒，2表示客户催单
+        map.put("orderId", ordersDB.getId());
+        map.put("content", "订单号：" + outTradeNo + "，请尽快处理");
+
+        String json = JSON.toJSONString(map);
+        webSocketServer.sendToAllClient(json);
     }
 
     /**
